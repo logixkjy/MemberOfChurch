@@ -1,0 +1,175 @@
+//
+//  SettingsView.swift
+//  MemberOfChurch
+//
+//  Created by JooYoung Kim on 8/17/25.
+//
+
+import SwiftUI
+import ComposableArchitecture
+
+struct SettingsView: View {
+    @EnvironmentObject var mainRouter: MainRouter
+    
+    let store: StoreOf<SettingsCore>
+    
+    @State private var showMenu: Bool = false  // 메뉴 표시 여부 관리
+    @State private var menuItem: MenuItem = MenuItem(title: "", expandableContent: .none, viewType: nil, subType: nil)
+    
+    var body: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            WithViewStore(mainRouter.loginStore, observe: { $0 }) { viewLoginStore in
+                ZStack {
+                    GeometryReader { geo in
+                        VStack {
+                            Text("환경설정")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 25, weight: .bold))
+                            
+                            Form {
+                                // 🔹 로그인 정보
+                                Section(header: Text("로그인 정보")) {
+                                    HStack {
+                                        Text("로그인 아이디")
+                                        Spacer()
+                                        Text(viewStore.loginId)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Toggle("자동로그인", isOn: viewStore.binding(
+                                        get: \.autoLogin, send: SettingsCore.Action.setAutoLogin
+                                    ))
+                                    
+                                    Button(role: .destructive) {
+                                        viewLoginStore.send(.userLogout)
+                                    } label: {
+                                        HStack {
+                                            Spacer()
+                                            Text("로그아웃")
+                                                .foregroundColor(.blue)
+                                        }
+                                    }
+                                }
+                                
+                                Section(header: Text("어플리케이션 정보")) {
+                                    HStack {
+                                        Text("버전")
+                                        Spacer()
+                                        Text(viewStore.appVersion)
+                                    }
+                                    
+                                    Button(action: {
+                                        viewStore.send(.openDeveloper)
+                                    }) {
+                                        HStack {
+                                            Text("개발자 정보")
+                                            Spacer()
+                                            Text("보기")
+                                                .foregroundColor(.blue)
+                                        }
+                                    }
+                                    
+                                    HStack {
+                                        Text("Copyright")
+                                        Spacer()
+                                        Text("GOODNEWS MISSOlN")
+                                            .foregroundColor(.green)
+                                    }
+                                }
+                            }
+                            .background(.white)
+                            
+                        }
+                        .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                        .background(.green04)
+                        .task {
+                            viewStore.send(.onAppear)
+                        }
+                    }
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar {
+                        // 🔹 왼쪽: 이전 버튼
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                if !mainRouter.mainPath.isEmpty {
+                                    mainRouter.mainPath.removeLast()
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                        .foregroundStyle(.green07)
+                                    Text("이전")
+                                        .foregroundStyle(.green07)
+                                }
+                            }
+                        }
+                        
+                        // 🔹 오른쪽: 메뉴 버튼
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                withAnimation {
+                                    showMenu.toggle()
+                                }
+                            }) {
+                                Image(systemName: "line.3.horizontal")
+                                    .imageScale(.large)
+                                    .foregroundStyle(.green07)
+                            }
+                        }
+                    }
+                    
+                    
+                    // 메뉴 버튼 누르면 나타나는 사이드 메뉴 (왼쪽에서 슬라이드)
+                    if showMenu {
+                        WithViewStore(mainRouter.loginStore, observe: { $0 }) { viewLoginStore in
+                            SideMenuView(showMenu: $showMenu, menuItem: $menuItem, loginEntity: viewLoginStore.loginEntity)
+                                .transition(.move(edge: .trailing))
+                                .zIndex(1)
+                        }
+                    }
+                }
+                .onChange(of: viewLoginStore.isLogin) { isLogin in
+                    if !isLogin {
+                        mainRouter.logout()
+                    }
+                }
+                .onChange(of: menuItem) { newValue in
+                    mainRouter.pop()
+                    if let viewType = menuItem.viewType {
+                        switch viewType {
+                        case .memberList:
+                            mainRouter.popAll()
+                        case .memberDetail:
+                            mainRouter.push(type: .memberDetailView)
+                        case .areaList:
+                            mainRouter.push(type: .areaListView)
+                        case .sectList:
+                            mainRouter.push(type: .sectListView)
+                        case .partyList:
+                            if let subType = menuItem.subType {
+                                mainRouter.partyStore.send(.setPartyInfo(subType.tag, menuItem.title))
+                                mainRouter.partyStore.send(.getPartyList)
+                            }
+                            mainRouter.push(type: .partyListView)
+                        case .wrkOrgList:
+                            if let subType = menuItem.subType {
+                                mainRouter.wrkOrgStore.send(.setWrkOrgInfo(subType.tag, menuItem.title))
+                                mainRouter.wrkOrgStore.send(.getWrkOrgList)
+                            }
+                            mainRouter.push(type: .wrkOrgListVIew)
+                        case .newMember:
+                            mainRouter.push(type: .newMemberView)
+                        case .fellowship:
+                            mainRouter.push(type: .fellowshipView)
+                        case .setting:
+                            mainRouter.push(type: .settingView)
+                        case .memberAdd:
+                            mainRouter.push(type: .memberAddView)
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+}
