@@ -18,7 +18,7 @@ struct WrkOrgEntity: Decodable, Equatable {
     let PSN_TP: String?
     let DUTY_CD: String?
     let PART_DUTY_CD: String?
-    let SECT_CD: Int
+    @FlexibleInt var SECT_CD: Int
     let ADDRESS: String?
     let HOME_PHONE: String?
     let MB_PHONE: String?

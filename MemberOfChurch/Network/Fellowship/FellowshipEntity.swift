@@ -47,7 +47,7 @@ struct FellowshipEntity: Decodable, Equatable {
     let PLBM_DTL_CTNT: String?
     let VISIT_FG: String?
     let ATTND_STS: String?
-    let AREA_CD: Int
+    @FlexibleInt var AREA_CD: Int
     let GENDER_NM: String?
     let DUTY_NM: String?
     let PARTY_NM: String?

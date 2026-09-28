@@ -11,9 +11,9 @@ struct LoginEntity: Decodable, Equatable {
     let MB_PHONE: String?
     let CHUR_CD: String?
     let CHUR_NM: String?
-    let AREA_CD: Int
-    let SECT_CD: Int
-    let MemberCnt: Int
+    @FlexibleInt var AREA_CD: Int
+    @FlexibleInt var SECT_CD: Int
+    @FlexibleInt var MemberCnt: Int
     let REG_USER_ID: String?
     let MOD_USER_ID: String?
 }

@@ -12,8 +12,8 @@ struct AreaListEntity: Decodable, Equatable {
 struct AreaEntity: Decodable, Equatable {
     let AREA_NM: String?
     let AREA_SECT_NM: String?
-    let AREA_CD: Int
-    let SECT_CD: Int
+    @FlexibleInt var AREA_CD: Int
+    @FlexibleInt var SECT_CD: Int
     let SECT_PSN_ID: String?
     let SECT_PSN_NM: String?
     let SECT_DUTY_NM: String?
@@ -26,12 +26,12 @@ struct AreaEntity: Decodable, Equatable {
     let SECT_PSN_WIF_EMAIL: String?
     let SECT_PSN_WIF_MB_PHONE: String?
     let SECT_WIF_PIC: String?
-    let TOTAL_CNT: Int
-    let CNT1: Int
-    let CNT2: Int
-    let CNT3: Int
-    let CNT4: Int
-    let CNT5: Int
+    @FlexibleInt var TOTAL_CNT: Int
+    @FlexibleInt var CNT1: Int
+    @FlexibleInt var CNT2: Int
+    @FlexibleInt var CNT3: Int
+    @FlexibleInt var CNT4: Int
+    @FlexibleInt var CNT5: Int
     
     init(
         AREA_NM: String? = nil,
@@ -84,12 +84,12 @@ struct AreaEntity: Decodable, Equatable {
 
 struct SectListEntity: Decodable, Equatable {
     let list: Array<Array<SectEntity>>?
-    let TOTAL_CNT: Int
-    let CNT1: Int
-    let CNT2: Int
-    let CNT3: Int
-    let CNT4: Int
-    let CNT5: Int
+    @FlexibleInt var TOTAL_CNT: Int
+    @FlexibleInt var CNT1: Int
+    @FlexibleInt var CNT2: Int
+    @FlexibleInt var CNT3: Int
+    @FlexibleInt var CNT4: Int
+    @FlexibleInt var CNT5: Int
     
     init(
         list: Array<Array<SectEntity>>? = nil,
@@ -111,8 +111,8 @@ struct SectListEntity: Decodable, Equatable {
 }
 
 struct SectEntity: Decodable, Equatable {
-    let SECT_CD: Int
-    let AREA_CD: Int
+    @FlexibleInt var SECT_CD: Int
+    @FlexibleInt var AREA_CD: Int
     let PSN_ID: String?
     let PSN_NM: String?
     let DUTY_NM: String?
@@ -123,9 +123,9 @@ struct SectEntity: Decodable, Equatable {
     let FAM_REP_NM: String?
     let FAM_REL_CD: String?
     let FAM_REL_NM: String?
-    let FAM_REL_SEQ: Int
+    @FlexibleInt var FAM_REL_SEQ: Int
     let PIC: String?
-    let SORT_SEQ: Int
+    @FlexibleInt var SORT_SEQ: Int
     
     init(
         SECT_CD: Int = 0,
@@ -169,8 +169,8 @@ struct ChurchListEntity: Decodable, Equatable {
 
 struct ChurSectEntity: Decodable, Equatable, Hashable {
     let CHUR_CD: String?
-    let AREA_CD: Int
-    let SECT_CD: Int
+    @FlexibleInt var AREA_CD: Int
+    @FlexibleInt var SECT_CD: Int
     let SECT_PSN_NM: String?
     let SECT_SUB_NM: String?
     let RMK: String?
@@ -210,9 +210,9 @@ struct ChurchEntity: Decodable, Equatable, Hashable {
     let PHONE_NO: String?
     let PHONE_NO2: String?
     let FAX_NO: String?
-    let AREA_NO: Int
-    let SECT_NO: Int
-    let SEQ: Int
+    @FlexibleInt var AREA_NO: Int
+    @FlexibleInt var SECT_NO: Int
+    @FlexibleInt var SEQ: Int
     let EST_DT: String?
     let CLS_DT: String?
     let ETC: String?

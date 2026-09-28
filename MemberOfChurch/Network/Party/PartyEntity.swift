@@ -10,8 +10,8 @@ struct PartyListEntity: Decodable, Equatable {
 }
 
 struct PartyEntity: Decodable, Equatable {
-    let SECT_CD: Int
-    let AREA_CD: Int
+    @FlexibleInt var SECT_CD: Int
+    @FlexibleInt var AREA_CD: Int
     let PSN_ID: String?
     let PSN_NM: String?
     let DUTY_NM: String?

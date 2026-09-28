@@ -18,7 +18,7 @@ struct MemberEntity: Decodable, Equatable {
     let PSN_TP: String?
     let DUTY_CD: String?
     let PART_DUTY_CD: String?
-    let SECT_CD: Int
+    @FlexibleInt var SECT_CD: Int
     let ADDRESS: String?
     let HOME_PHONE: String?
     let MB_PHONE: String?
@@ -47,7 +47,7 @@ struct MemberEntity: Decodable, Equatable {
     let PLBM_DTL_CTNT: String?
     let VISIT_FG: String?
     let ATTND_STS: String?
-    let AREA_CD: Int
+    @FlexibleInt var AREA_CD: Int
     let GENDER_NM: String?
     let DUTY_NM: String?
     let PARTY_NM: String?
